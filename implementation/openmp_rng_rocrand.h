@@ -23,7 +23,7 @@
     } \
   }
 
-void run(int* data, 
+void run(unsigned int* data, 
          const rocrand_rng_type rng_type,
          const size_t sz, 
          const size_t offset = 0, const size_t dimensions = 1)
