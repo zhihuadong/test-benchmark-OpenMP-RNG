@@ -7,6 +7,7 @@
 //RNG_IMPL_CURAND            :using CUDA CURAND library for NVIDIA GPU
 //RNG_IMPL_ROCRAND           :using HIP ROCRAND library for AMD GPU
 
+
 //FIXME: Later need to find the best flag/macro to be used
 
 #if defined(USE_RANDOM123)
@@ -28,7 +29,30 @@
 
 #endif  
 
-void 
 
+#if defined(RNG_IMPL_RANDOM123)
+#  include "implementation/"
+#elif defined(RNG_IMPL_CURAND)
+#  include "implementation/"
+#elif defined(RNG_IMPL_ROCRAND)
+#  include "implementation/"
+#elif defined(RNG_IMPL_BASIC)
+#  include "implementation/"
+#else
+#  error Must specify a RNG_IMPL_* in openmp_rng.h
+#endif
+
+//#FIXME what is the set of arguments do we need?
+template<typename T>
+void omp_generate_rng(T* data,	
+		      const distribution_type dis,
+		      const generator_type gen,
+		      size_t num,
+		      size_t seed,
+		      size_t offset,
+		      size_t dimension)
+{
+	_openmp_rng_impl::do_it();
+}
 
 #endif
