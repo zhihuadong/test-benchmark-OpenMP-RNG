@@ -23,7 +23,7 @@
     } \
   }
 
-void run(unsigned int* data, 
+void run(unsigned int* data_d, 
          const rocrand_rng_type rng_type,
          const size_t sz, 
          const size_t offset = 0, const size_t dimensions = 1)
@@ -43,7 +43,7 @@ void run(unsigned int* data,
       ROCRAND_CHECK(status);
   }
 
-  ROCRAND_CHECK(rocrand_generate(generator, data, sz));
+  ROCRAND_CHECK(rocrand_generate(generator, data_d, sz));
   HIP_CHECK(hipDeviceSynchronize());
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
