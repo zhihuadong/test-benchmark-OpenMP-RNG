@@ -28,7 +28,12 @@
 
 #endif  
 
-void 
-
+#if defined(RNG_IMPL_ROCRAND)
+#  include "implementation/openmp_rng_rocrand.h"
+#elif defined(RNG_IMPL_CURAND)
+#  include "implementation/openmp_rng_curand.h"
+#else
+#  error Must specify a RNG_IMPL_* in openmp_rng.h
+#endif
 
 #endif
