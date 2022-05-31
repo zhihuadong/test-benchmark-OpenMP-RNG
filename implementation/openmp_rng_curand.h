@@ -2,7 +2,8 @@
 #define _OPENMP_RNG_CURAND_H
 
 #include <iostream>
-#include <cuda_runtime.h>
+#include <cassert>
+//#include <cuda_runtime.h>
 #include <curand.h>
 
 #include "useful_enum.h"
@@ -16,7 +17,7 @@
 
 inline curandRngType get_rng_type(const generator_enum rng_type_enum)
 {
-  curandRngType rng_type = ROCRAND_RNG_PSEUDO_XORWOW;
+  curandRngType rng_type = CURAND_RNG_PSEUDO_XORWOW;
   switch(rng_type_enum)
   {
     case generator_enum::philox:
@@ -64,7 +65,7 @@ void openmp_get_rng_uniform_uint(unsigned int* data_d,
   }
 
   CURAND_CALL(curandGenerate(generator, data_d, sz));
-  CUDA_CALL(cudaDeviceSynchronize());			//FIXME: might not needed!
+//  CUDA_CALL(cudaDeviceSynchronize());			//FIXME: might not needed!
 
   CURAND_CALL(curandDestroyGenerator(generator));
 }
