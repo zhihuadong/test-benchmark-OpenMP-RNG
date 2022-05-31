@@ -7,6 +7,7 @@
 //RNG_IMPL_CURAND            :using CUDA CURAND library for NVIDIA GPU
 //RNG_IMPL_ROCRAND           :using HIP ROCRAND library for AMD GPU
 
+
 //FIXME: Later need to find the best flag/macro to be used
 
 #if defined(USE_RANDOM123)
