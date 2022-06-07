@@ -4,12 +4,20 @@
 
 #include "openmp_rng.h"
 
-#define MYMALLOC(T, SZ) T* data = (T*)malloc(sizeof(T) * (SZ));
+#define MYMALLOC(T, S) T* data = (T*)malloc(sizeof(T) * (S));
 
 int main()
 {
   int output_interval = 10;
+
+#if defined(ARCH_CUDA)
   std::vector<generator_enum> gen_type = {generator_enum::philox, generator_enum::xorwow, generator_enum::mrg32k3a, generator_enum::sobol32, generator_enum::sobol64, generator_enum::mtgp32, generator_enum::mt19937};
+#elif defined(ARCH_HIP)
+  std::vector<generator_enum> gen_type = {generator_enum::philox, generator_enum::xorwow, generator_enum::mrg32k3a, generator_enum::sobol32, generator_enum::sobol64, generator_enum::mtgp32};
+#else
+  assert(0 && "Error! Must specify the usage of RNG!\n");
+#endif
+
   for(int i=0; i<gen_type.size(); i++)
   {
     if(gen_type[i] != generator_enum::sobol64)
