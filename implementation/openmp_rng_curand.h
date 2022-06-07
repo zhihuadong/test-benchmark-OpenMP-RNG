@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <cassert>
-//#include <cuda_runtime.h>
 #include <curand.h>
 
 #include "useful_enum.h"
@@ -32,8 +31,14 @@ inline curandRngType get_rng_type(const generator_enum rng_type_enum)
     case generator_enum::sobol32:
       rng_type = CURAND_RNG_QUASI_SOBOL32;
       break;
+    case generator_enum::sobol64:
+      rng_type = CURAND_RNG_QUASI_SOBOL64;
+      break;
     case generator_enum::mtgp32:
       rng_type = CURAND_RNG_PSEUDO_MTGP32;
+      break;
+    case generator_enum::mt19937:
+      rng_type = CURAND_RNG_PSEUDO_MT19937;
       break;
     default:
       assert(0 && "Error: rng_type set incorrectly, can not find desired rng_type_enum.\n");      
@@ -41,34 +46,110 @@ inline curandRngType get_rng_type(const generator_enum rng_type_enum)
   return rng_type;
 }
 
-void openmp_get_rng_uniform_uint(unsigned int* data_d, 
-         			 const size_t sz, 
-         			 const generator_enum rng_type_enum = generator_enum::philox,
-         			 const size_t offset = 0, const size_t dimensions = 1)
+inline void _set_up_generator(curandGenerator_t &generator,
+                              unsigned long long seed,
+                              const generator_enum rng_type_enum,
+                              const size_t offset, const size_t dimensions)
 {
-  curandGenerator_t generator;	
-
   curandRngType rng_type = get_rng_type(rng_type_enum);
-
   CURAND_CALL(curandCreateGenerator(&generator, rng_type));
 
-  curandStatus_t status = curandSetQuasiRandomGeneratorDimensions(generator, dimensions);
-  if (status != CURAND_STATUS_TYPE_ERROR) // If the RNG is not quasi-random
-  {
-      CURAND_CALL(status);
-  }
+  if(rng_type_enum != generator_enum::sobol32 && rng_type_enum != generator_enum::sobol64)
+    CURAND_CALL(curandSetPseudoRandomGeneratorSeed(generator, seed));
 
-  status = curandSetGeneratorOffset(generator, offset);
-  if (status != CURAND_STATUS_TYPE_ERROR) // If the RNG is not pseudo-random
-  {
-      CURAND_CALL(status);
-  }
+  if(rng_type_enum == generator_enum::sobol32 || rng_type_enum == generator_enum::sobol64)
+    CURAND_CALL(curandSetQuasiRandomGeneratorDimensions(generator, dimensions));
 
+  if(rng_type_enum != generator_enum::mtgp32 && rng_type_enum != generator_enum::mt19937)
+    CURAND_CALL(curandSetGeneratorOffset(generator, offset)); 
+}
+
+//FIXME: Need to figure out if device sync is needed!!!!!
+
+void omp_get_rng_uniform_uint(unsigned int* data_d, 
+         			                const size_t sz,
+                              unsigned long long seed,
+         			                const generator_enum rng_type_enum,
+         			                const size_t offset, const size_t dimensions)
+{
+  assert(rng_type_enum != generator_enum::sobol64 && "Error: omp_get_rng_uniform_uint does not support sobol64 generator type!\n");
+
+  curandGenerator_t generator;
+
+  _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
+
+#pragma omp target data use_device_ptr(data_d)
   CURAND_CALL(curandGenerate(generator, data_d, sz));
-//  CUDA_CALL(cudaDeviceSynchronize());			//FIXME: might not needed!
 
   CURAND_CALL(curandDestroyGenerator(generator));
 }
 
+void omp_get_rng_uniform_float(float* data_d, 
+         			                 const size_t sz, 
+                               unsigned long long seed,
+         			                 const generator_enum rng_type_enum,
+         			                 const size_t offset, const size_t dimensions)
+{
+  curandGenerator_t generator;	
+
+  _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
+
+#pragma omp target data use_device_ptr(data_d)  
+  CURAND_CALL(curandGenerateUniform(generator, data_d, sz));
+
+  CURAND_CALL(curandDestroyGenerator(generator));
+}
+
+
+void omp_get_rng_uniform_double(double* data_d, 
+         			                  const size_t sz, 
+                                unsigned long long seed,
+         			                  const generator_enum rng_type_enum,
+         			                  const size_t offset, const size_t dimensions)
+{
+  curandGenerator_t generator;	
+
+  _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
+
+#pragma omp target data use_device_ptr(data_d)  
+  CURAND_CALL(curandGenerateUniformDouble(generator, data_d, sz));
+
+  CURAND_CALL(curandDestroyGenerator(generator));
+}
+
+
+void omp_get_rng_normal_float(float* data_d, 
+         			                const size_t sz, 
+                              float mean, float stddev,
+                              unsigned long long seed,
+         			                const generator_enum rng_type_enum,
+         			                const size_t offset, const size_t dimensions)
+{
+  curandGenerator_t generator;	
+
+  _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
+
+#pragma omp target data use_device_ptr(data_d)  
+  CURAND_CALL(curandGenerateNormal(generator, data_d, sz, mean, stddev));
+
+  CURAND_CALL(curandDestroyGenerator(generator));
+}
+
+void omp_get_rng_normal_double(double* data_d, 
+         			                 const size_t sz, 
+                               double mean, double stddev,
+                               unsigned long long seed,
+         			                 const generator_enum rng_type_enum,
+         			                 const size_t offset, const size_t dimensions)
+{
+  curandGenerator_t generator;	
+
+  _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
+
+#pragma omp target data use_device_ptr(data_d)  
+  CURAND_CALL(curandGenerateNormalDouble(generator, data_d, sz, mean, stddev));
+
+  CURAND_CALL(curandDestroyGenerator(generator));
+}
 
 #endif

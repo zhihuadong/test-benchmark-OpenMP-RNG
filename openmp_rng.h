@@ -29,6 +29,7 @@
 
 #endif  
 
+
 #if defined(RNG_IMPL_ROCRAND)
 #  include "implementation/openmp_rng_rocrand.h"
 #elif defined(RNG_IMPL_CURAND)
@@ -36,5 +37,47 @@
 #else
 #  error Must specify a RNG_IMPL_* in openmp_rng.h
 #endif
+
+
+//Important usage: Only call these function ONCE! 
+//Everytime you call these functions, they will automatically update the status of the RNG
+//so the subsequent calls will generate the same random number sequence unless you manually change the seed/offset
+
+//Generate uniform distribution so that each output element is a 32-bit unsigned int where all bits are random.
+void omp_get_rng_uniform_uint(unsigned int* data_d,
+                              const size_t sz,
+                              unsigned long long seed = 1234ull,
+                              const generator_enum rng_type_enum = generator_enum::philox,
+                              const size_t offset = 0, const size_t dimensions = 1);
+
+//Generate standard uniform distribution between (0.0, 1.0] with type float
+void omp_get_rng_uniform_float(float* data_d,
+                               const size_t sz,
+                               unsigned long long seed = 1234ull,
+                               const generator_enum rng_type_enum = generator_enum::philox,
+                               const size_t offset = 0, const size_t dimensions = 1);
+
+//Generate standard uniform distribution between (0.0, 1.0] with type double
+void omp_get_rng_uniform_double(double* data_d,
+                                const size_t sz,
+                                unsigned long long seed = 1234ull,
+                                const generator_enum rng_type_enum = generator_enum::philox,
+                                const size_t offset = 0, const size_t dimensions = 1);
+
+//Generate standard normal distribution with type float
+void omp_get_rng_normal_float(float* data_d,
+                              const size_t sz,
+                              float mean = 0.0f, float stddev = 1.0f,
+                              unsigned long long seed = 1234ull,
+                              const generator_enum rng_type_enum = generator_enum::philox,
+                              const size_t offset = 0, const size_t dimensions = 1);
+
+//Generate standard normal distribution with type double
+void omp_get_rng_normal_double(double* data_d,
+                               const size_t sz,
+                               double mean = 0.0, double stddev = 1.0,
+                               unsigned long long seed = 1234ull,
+                               const generator_enum rng_type_enum = generator_enum::philox,
+                               const size_t offset = 0, const size_t dimensions = 1);
 
 #endif
