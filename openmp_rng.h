@@ -34,6 +34,10 @@
 #  include "implementation/openmp_rng_rocrand.h"
 #elif defined(RNG_IMPL_CURAND)
 #  include "implementation/openmp_rng_curand.h"
+#elif defined(RNG_IMPL_RANDOM123)
+#  include "implementation/openmp_rng_random123.h"
+#elif defined(RNG_IMPL_BASIC)
+#  include "implementation/openmp_rng_basic.h"
 #else
 #  error Must specify a RNG_IMPL_* in openmp_rng.h
 #endif
