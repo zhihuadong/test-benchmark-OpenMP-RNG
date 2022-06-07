@@ -20,6 +20,7 @@ int main()
 
   for(int i=0; i<gen_type.size(); i++)
   {
+    std::cout << "Start to do gen_type " << i << std::endl;
     if(gen_type[i] != generator_enum::sobol64)
     {	
       size_t sz = 1024 * 1024 * 128;
