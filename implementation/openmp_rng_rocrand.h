@@ -7,6 +7,8 @@
 #include <cassert>
 #include <rocrand/rocrand.h>
 
+#include <omp.h>
+
 #include "useful_enum.h"
 
 #define ROCRAND_CHECK(condition)                 \

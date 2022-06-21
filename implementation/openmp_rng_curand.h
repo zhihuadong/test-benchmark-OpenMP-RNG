@@ -5,6 +5,8 @@
 #include <cassert>
 #include <curand.h>
 
+#include <omp.h>
+
 #include "useful_enum.h"
 
 #define CUDA_CALL(x) do { if((x)!=cudaSuccess) { \
