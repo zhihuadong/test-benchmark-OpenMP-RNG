@@ -80,7 +80,6 @@ void omp_get_rng_uniform_uint(unsigned int* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   CURAND_CALL(curandGenerate(generator, data_d, sz));
 
   CURAND_CALL(curandDestroyGenerator(generator));
@@ -96,7 +95,6 @@ void omp_get_rng_uniform_float(float* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)  
   CURAND_CALL(curandGenerateUniform(generator, data_d, sz));
 
   CURAND_CALL(curandDestroyGenerator(generator));
@@ -113,7 +111,6 @@ void omp_get_rng_uniform_double(double* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)  
   CURAND_CALL(curandGenerateUniformDouble(generator, data_d, sz));
 
   CURAND_CALL(curandDestroyGenerator(generator));
@@ -131,7 +128,6 @@ void omp_get_rng_normal_float(float* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)  
   CURAND_CALL(curandGenerateNormal(generator, data_d, sz, mean, stddev));
 
   CURAND_CALL(curandDestroyGenerator(generator));
@@ -148,7 +144,6 @@ void omp_get_rng_normal_double(double* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)  
   CURAND_CALL(curandGenerateNormalDouble(generator, data_d, sz, mean, stddev));
 
   CURAND_CALL(curandDestroyGenerator(generator));

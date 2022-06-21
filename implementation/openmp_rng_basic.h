@@ -5,6 +5,8 @@
 #include <cassert>
 #include <random>
 
+#include <omp.h>
+
 #include "useful_enum.h"
 
 void omp_get_rng_uniform_uint(unsigned int* data_h,

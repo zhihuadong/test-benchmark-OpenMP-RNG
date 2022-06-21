@@ -81,7 +81,6 @@ void omp_get_rng_uniform_uint(unsigned int* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   ROCRAND_CHECK(rocrand_generate(generator, data_d, sz));
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
@@ -97,7 +96,6 @@ void omp_get_rng_uniform_float(float* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   ROCRAND_CHECK(rocrand_generate_uniform(generator, data_d, sz));
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
@@ -113,7 +111,6 @@ void omp_get_rng_uniform_double(double* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   ROCRAND_CHECK(rocrand_generate_uniform_double(generator, data_d, sz));
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
@@ -130,7 +127,6 @@ void omp_get_rng_normal_float(float* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   ROCRAND_CHECK(rocrand_generate_normal(generator, data_d, sz, mean, stddev));
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
@@ -147,7 +143,6 @@ void omp_get_rng_normal_double(double* data_d,
 
   _set_up_generator(generator, seed, rng_type_enum, offset, dimensions);
 
-#pragma omp target data use_device_ptr(data_d)
   ROCRAND_CHECK(rocrand_generate_normal_double(generator, data_d, sz, mean, stddev));
 
   ROCRAND_CHECK(rocrand_destroy_generator(generator));
