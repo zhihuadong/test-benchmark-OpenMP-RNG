@@ -56,6 +56,7 @@ inline std::ostream& operator<<(std::ostream & os, const generator_enum & gen)
       os << "Error: Unrecognized generator_enum";
       assert(0);
   }
+  return os;
 }
 
 #endif

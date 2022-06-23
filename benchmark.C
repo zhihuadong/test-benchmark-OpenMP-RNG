@@ -43,7 +43,7 @@ int main()
   //Test the most general usage
   for(int i=0; i<gen_type.size(); i++)
   {
-    std::cout << "Start to do gen_type " << i << std::endl;
+    std::cout << "Start to do gen_type " << gen_type[i] << std::endl;
     if(gen_type[i] != generator_enum::sobol64)
     {	
       std::cout << "Benchmark uniform_uint" << std::endl;
