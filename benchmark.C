@@ -7,10 +7,27 @@
 
 #define MYMALLOC(T, S) T* data = (T*)malloc(sizeof(T) * (S));
 
+void _myprint(double tt, int sz, int ntrials)
+{
+        std::cout << std::fixed << std::setprecision(3)
+              << "      "
+              << " Samples = "
+              << std::setw(8) << (ntrials * sz) /
+                    (tt * (1 << 30))
+              << " GSample/s, AvgTime (1 trial) = "
+              << std::setw(8) << tt * 1e3 / ntrials
+              << " ms, Time (all) = "
+              << std::setw(8) << tt * 1e3
+              << " ms, Size = " << sz
+              << std::endl;
+
+}
+
 int main()
 {
   int output_interval = 10;
-  int ntrials = 200;
+  int ntrials = 10;
+  size_t sz = 1024 * 1024 * 128;
 
 #if defined(ARCH_CUDA)
   std::vector<generator_enum> gen_type = {generator_enum::philox, generator_enum::xorwow, generator_enum::mrg32k3a, generator_enum::sobol32, generator_enum::mtgp32, generator_enum::mt19937};
@@ -30,7 +47,6 @@ int main()
     if(gen_type[i] != generator_enum::sobol64)
     {	
       std::cout << "Benchmark uniform_uint" << std::endl;
-      size_t sz = 1024 * 1024 * 128;
       MYMALLOC(unsigned int, sz);
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data map(to:data[0:sz])
@@ -52,18 +68,7 @@ int main()
         }
         tt += omp_get_wtime();
       }
-        std::cout << std::fixed << std::setprecision(3)
-              << "      "
-              << " Samples = "
-              << std::setw(8) << (ntrials * sz) /
-                    (tt / 1e3 * (1 << 30))
-              << " GSample/s, AvgTime (1 trial) = "
-              << std::setw(8) << tt / ntrials
-              << " ms, Time (all) = "
-              << std::setw(8) << tt
-              << " ms, Size = " << sz
-              << std::endl;
-
+      _myprint(tt, sz, ntrials);
     }
     {	
       std::cout << "Benchmark uniform_float" << std::endl;
@@ -88,18 +93,7 @@ int main()
         }
         tt += omp_get_wtime();
       }
-      std::cout << std::fixed << std::setprecision(3)
-              << "      "
-              << " Samples = "
-              << std::setw(8) << (ntrials * sz) /
-                    (tt / 1e3 * (1 << 30))
-              << " GSample/s, AvgTime (1 trial) = "
-              << std::setw(8) << tt / ntrials
-              << " ms, Time (all) = "
-              << std::setw(8) << tt
-              << " ms, Size = " << sz
-              << std::endl;
-
+      _myprint(tt, sz, ntrials);
     }
     {	
       std::cout << "Benchmark uniform_double" << std::endl;
@@ -124,18 +118,7 @@ int main()
         }
         tt += omp_get_wtime();
       }
-      std::cout << std::fixed << std::setprecision(3)
-              << "      "
-              << " Samples = "
-              << std::setw(8) << (ntrials * sz) /
-                    (tt / 1e3 * (1 << 30))
-              << " GSample/s, AvgTime (1 trial) = "
-              << std::setw(8) << tt / ntrials
-              << " ms, Time (all) = "
-              << std::setw(8) << tt
-              << " ms, Size = " << sz
-              << std::endl;
-
+      _myprint(tt, sz, ntrials);
     }
     {	
       std::cout << "Benchmark normal_float" << std::endl;
@@ -160,18 +143,7 @@ int main()
         }
         tt += omp_get_wtime();
       }
-      std::cout << std::fixed << std::setprecision(3)
-              << "      "
-              << " Samples = "
-              << std::setw(8) << (ntrials * sz) /
-                    (tt / 1e3 * (1 << 30))
-              << " GSample/s, AvgTime (1 trial) = "
-              << std::setw(8) << tt / ntrials
-              << " ms, Time (all) = "
-              << std::setw(8) << tt
-              << " ms, Size = " << sz
-              << std::endl;
-
+      _myprint(tt, sz, ntrials);
     }
     {	
       std::cout << "Benchmark normal_double" << std::endl;
@@ -196,18 +168,7 @@ int main()
         }
         tt += omp_get_wtime();
       }
-      std::cout << std::fixed << std::setprecision(3)
-              << "      "
-              << " Samples = "
-              << std::setw(8) << (ntrials * sz) /
-                    (tt / 1e3 * (1 << 30))
-              << " GSample/s, AvgTime (1 trial) = "
-              << std::setw(8) << tt / ntrials
-              << " ms, Time (all) = "
-              << std::setw(8) << tt
-              << " ms, Size = " << sz
-              << std::endl;
-
+      _myprint(tt, sz, ntrials);
     }
   }
 }

@@ -1,1 +1,1 @@
-clang++ -O3 -fopenmp test.C -lm 
+clang++ -O3 -fopenmp -fopenmp-targets=host test.C -lm 
