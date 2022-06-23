@@ -27,7 +27,7 @@ int main()
 {
   int output_interval = 10;
   int ntrials = 10;
-  size_t sz = 1024 * 1024 * 128;
+  size_t sz = 1024 * 1024 * 32;
 
 #if defined(ARCH_CUDA)
   std::vector<generator_enum> gen_type = {generator_enum::philox, generator_enum::xorwow, generator_enum::mrg32k3a, generator_enum::sobol32, generator_enum::mtgp32, generator_enum::mt19937};
@@ -72,7 +72,6 @@ int main()
     }
     {	
       std::cout << "Benchmark uniform_float" << std::endl;
-      size_t sz = 1024 * 1024 * 128;
       MYMALLOC(float, sz);
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data map(tofrom:data[0:sz])
@@ -97,7 +96,6 @@ int main()
     }
     {	
       std::cout << "Benchmark uniform_double" << std::endl;
-      size_t sz = 1024 * 1024 * 128;
       MYMALLOC(double, sz);
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data map(tofrom:data[0:sz])
@@ -122,7 +120,6 @@ int main()
     }
     {	
       std::cout << "Benchmark normal_float" << std::endl;
-      size_t sz = 1024 * 1024 * 128;
       MYMALLOC(float, sz);
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data map(tofrom:data[0:sz])
@@ -147,7 +144,6 @@ int main()
     }
     {	
       std::cout << "Benchmark normal_double" << std::endl;
-      size_t sz = 1024 * 1024 * 128;
       MYMALLOC(double, sz);
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data map(tofrom:data[0:sz])
