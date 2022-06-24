@@ -21,8 +21,8 @@ int main()
   size_t output_interval = 32;
   double tt;
   MYMALLOC(float, sz);
-  bool test_omp_target_map = false;
-  bool test_omp_target_alloc = true;
+  bool test_omp_target_map = true;
+  bool test_omp_target_alloc = false;
 
   //Test omp target map
   if(test_omp_target_map)
@@ -48,7 +48,7 @@ int main()
     float* data_d = (float*)omp_target_alloc(sizeof(float) * sz, device_id);
     {
       tt = -omp_get_wtime();
-      omp_get_rng_normal_float(data_d, sz, 0.0, 1.0, 1234ull, gen_type);
+      omp_get_rng_normal_float(data_d, sz, 0.0f, 1.0f, 1234ull, gen_type);
       tt += omp_get_wtime();
     }
     omp_target_memcpy(data, data_d, sizeof(float) * sz, 0, 0, host_id, device_id);
