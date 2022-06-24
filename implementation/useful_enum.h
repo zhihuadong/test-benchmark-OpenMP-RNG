@@ -5,14 +5,14 @@
 
 /* For each backend, below is the support table of each generator
  *
- * generator	random123	  CUDA		HIP
- * philox	    True		    True		True
- * xorwow	    False		    True		True
- * mrg32k3a	  False		    True		True
- * sobol32	  False		    True		True
- * sobol64	  False		    True		True
- * mtgp32	    False		    True		True
- * mt19937    False       True    False
+ * generator	basic		random123	CUDA		HIP
+ * philox	False		True		True		True
+ * xorwow	False		False		True		True
+ * mrg32k3a	False		False		True		True
+ * sobol32	False		False		True		True
+ * sobol64	False		False		True		True
+ * mtgp32	False		False		True		True
+ * mt19937    	True		False       	True    	False
  *
  */
 
