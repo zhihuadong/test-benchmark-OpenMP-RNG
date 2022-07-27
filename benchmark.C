@@ -129,14 +129,14 @@ int main()
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data use_device_ptr(data)
 #endif
-        omp_get_rng_normal_float(data, sz, 1.0f, 1.0f, 1234ull, gen_type[i]);
+        omp_get_rng_normal_float(data, sz, 0.0f, 1.0f, 1234ull, gen_type[i]);
         tt = -omp_get_wtime();
         for(int j=0; j<ntrials; j++)
         {
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data use_device_ptr(data)
 #endif
-          omp_get_rng_normal_float(data, sz, 1.0f, 1.0f, 1234ull, gen_type[i]);
+          omp_get_rng_normal_float(data, sz, 0.0f, 1.0f, 1234ull, gen_type[i]);
         }
         tt += omp_get_wtime();
       }
@@ -153,14 +153,14 @@ int main()
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data use_device_ptr(data)
 #endif
-        omp_get_rng_normal_double(data, sz, 0.0, 10.0, 1234ull, gen_type[i]);
+        omp_get_rng_normal_double(data, sz, 0.0, 1.0, 1234ull, gen_type[i]);
         tt = -omp_get_wtime();
         for(int j=0; j<ntrials; j++)
         {
 #if defined(ARCH_CUDA) || defined(ARCH_HIP)
   #pragma omp target data use_device_ptr(data)
 #endif
-          omp_get_rng_normal_double(data, sz, 0.0, 10.0, 1234ull, gen_type[i]);
+          omp_get_rng_normal_double(data, sz, 0.0, 1.0, 1234ull, gen_type[i]);
         }
         tt += omp_get_wtime();
       }
