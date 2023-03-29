@@ -7,7 +7,10 @@
 #include <cassert>
 #include <rocrand/rocrand.h>
 
-#include <omp.h>
+#include <chrono>
+using CTime = std::chrono::high_resolution_clock;
+#define  CHRONO_DUR(d) std::chrono::duration<double>(d).count()
+
 
 #include "useful_enum.h"
 
@@ -54,7 +57,7 @@ inline void _set_up_generator(rocrand_generator &generator,
                               const generator_enum rng_type_enum,
                               const size_t offset, const size_t dimensions)
 {
-  double tt = -omp_get_wtime();
+  auto tt = CTime::now();
   rocrand_rng_type rng_type = get_rng_type(rng_type_enum);
   ROCRAND_CHECK(rocrand_create_generator(&generator, rng_type));
 
@@ -67,7 +70,7 @@ inline void _set_up_generator(rocrand_generator &generator,
   if(rng_type_enum != generator_enum::mtgp32)
     ROCRAND_CHECK(rocrand_set_offset(generator, offset));
   tt += omp_get_wtime();
-  std::cout << "Time for setting up generator is " << tt * 1e3 << " ms" << std::endl;
+  std::cout << "Time for setting up generator is " << CHRONO_DUR(CTime::now() - tt )  * 1e3 << " ms" << std::endl;
 }
 
 //FIXME: Need to figure out if device sync is needed!!!!!
